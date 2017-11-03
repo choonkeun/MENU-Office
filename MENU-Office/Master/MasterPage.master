@@ -1,0 +1,198 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="~/Master/MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head id="Head1" runat="server">
+<title></title>
+<!--jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!--Bootstrap-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/cerulean/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!--Not Used
+    <link href="~/Contents/css/bootstrap.css" rel="stylesheet" />   https://bootswatch.com/cerulean/
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />  Background: Black
+-->    
+    <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
+    <style>
+        [class*="col-"].padding-5 { padding-left:5px; padding-right:5px; }
+
+        @media only screen and (min-width : 768px) {
+            .dropdown:hover .dropdown-menu { display: block; }  /* Make Navigation Toggle on Desktop Hover */
+        }
+    </style>
+
+
+</head> 
+<body>
+<form id="form1" runat="server" enctype="multipart/form-data" >
+<div>
+    <!-- Static navbar -->
+    <div class="container">
+        <nav role="navigation" class="navbar navbar-inverse">
+
+            <!-- Collection of nav links, forms, and other content for toggling -->
+            <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+                <div class="navbar-inner">
+                <div class="container">
+                    <div class="navbar-header pull-left">
+                        <a class="navbar-brand" href=" <%=ResolveClientUrl("~/default.aspx")%> ">Home</a>
+                    </div>
+                    <div class="navbar-header pull-right">
+                        <ul class="nav navbar-nav pull-left">
+                        <li>
+                            <a href="#">Fixed Link</a>
+                        </li>
+                        </ul>
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="http://192.168.6.49">URL POST <b class="caret"></b></a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/GetPost.aspx")%> ">GET / POST</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/Psychemedics_Post.aspx")%> ">Psychemedics POST</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/CIPReporting.aspx")%> ">CIPReporting</a></li>
+                                <!--<li><a href=" <%=ResolveClientUrl("~/CALLDLL/Post.aspx")%> ">C R U D - AJAX</a></li> -->
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/SambaPasswd.aspx")%> ">Samba-Password</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/PostSamba1.aspx")%> ">1.Interactive-CDLIS</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/PostSamba2.aspx")%> ">2.Interactive-MVR</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/PostSamba21.aspx")%> ">2.Interactive-MVR(XML/HTML)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/PostSamba3.aspx")%> ">3.SendOrder-CDLIS/MVR</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/PostSamba4.aspx")%> ">4.Receive Records(Get)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/PostSamba41.aspx")%> ">5.Receive Records(Post)</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/EBE_DirectView.aspx")%> ">EBE_Direct (View Token)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/EBE_Direct.aspx")%> ">EBE_Direct</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/DataLink_Password.aspx")%> ">DataLink-Password</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/DataLink_SendOrders_cdlis.aspx")%> ">DataLink-SendOrders(CDLIS)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/DataLink_SendOrders_mvr.aspx")%> ">DataLink-SendOrders(MVR)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/DataLink_SearchReports.aspx")%> ">DataLink-SearchReports</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/DataLink_XSLT1.aspx")%> ">DataLink-MVR XSLT</a></li>
+                            </ul>
+                        </li> <!-- End dropdown -->
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="http://192.168.6.49">Background Check <b class="caret"></b></a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href=" <%=ResolveClientUrl("~/XSLT/CDLXSLT.aspx")%> ">XSLT - CDLIS</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/XSLT/MVRXSLT.aspx")%> ">XSLT - MVR</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/XSLT/BGCXSLT.aspx")%> ">XSLT-DF</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/XSLT/BGCXSLT2.aspx")%> ">XSLT-BGC</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/XSLT/BGCXSLT3.aspx")%> ">XSLT-Custom</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/XSLT/CRIM1.aspx")%> ">1:Initiate</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/XSLT/CRIM11.aspx")%> ">1:Initiate(4.14)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/XSLT/CRIM2.aspx")%> ">2:Fulfillment Status</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/XSLT/CRIM3.aspx")%> ">3:Fulfill Search</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/XSLT/CRIM4.aspx")%> ">4:Acknowledgement</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/LabCorp_password.aspx")%> ">LabCorp password</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/LabCorp_reSend.aspx")%> ">LabCorp reSend</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/LabCorp_locateCollectionSites.aspx")%> ">LabCorp locateCollectionSites</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/LabCorp_matchSites.aspx")%> ">LabCorp matchSites</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/LabCorp_getPanelDetails.aspx")%> ">LabCorp getPanelDetails</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/LabData_Post.aspx")%> ">LabData POST</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/CompLabData.aspx")%> ">Compare LabData </a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/CompLabNotes.aspx")%> ">Compare LabNotes </a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/CALLDLL/ComptestQtys.aspx")%> ">Compare testQtys </a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">5:---Other---</a></li>
+                            </ul>
+                        </li> <!-- End dropdown -->
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="http://192.168.6.49">Driver Record <b class="caret"></b></a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href=" <%=ResolveClientUrl("~/Driver/Tooltip0.aspx")%> ">Test Tooltip 0</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/Driver/DriverText1.aspx")%> ">Driver1-TEXT(memory)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/Driver/DriverText3.aspx")%> ">Driver3-TEXT(thread 100k)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/Driver/DriverText4.aspx")%> ">Driver4-TEXT(thread ajax)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/Driver/DriverText5.aspx")%> ">Driver5-TEXT(task ajax)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/Driver/DriverText6.aspx")%> ">Driver6-TEXT(thread DragDrop)</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/Driver/AppUser.aspx")%> ">DriverPortal User</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/Driver/AppCompany.aspx")%> ">DriverPortal DriverCompany</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/Driver/AppRebuttal.aspx")%> ">DriverPortal Rebuttal</a></li>
+                                <li class="divider"></li>
+                            </ul>
+                        </li> <!-- End dropdown -->
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="http://192.168.6.49">Convert PDF<b class="caret"></b></a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href=" <%=ResolveClientUrl("~/PDF/PA_Release.aspx")%> ">PA_Release</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/PDF/AK_Release.aspx")%> ">AK_Release</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/PDF/PA_Release_Samba.aspx")%> ">PA_Release(Samba)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/PDF/PA_Release_715.aspx")%> ">PA_Release(7-15)</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%= Page.ResolveClientUrl("~/PDF/BarcodeSoftek.aspx")%> ">Softek Barcode</a></li>
+                                <li><a href=" <%= Page.ResolveClientUrl("~/PDF/BarcodeDebENU.aspx")%> ">DebENU Barcode</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%= Page.ResolveClientUrl("~/OCR/OCR1.aspx")%> ">OCR - 1 File</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%= Page.ResolveClientUrl("~/ABCPDF/ABC_HTML_PDF.aspx")%> ">ABCPDF HTML_TO_PDF</a></li>
+                            </ul>
+                        </li> <!-- End dropdown -->
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="http://192.168.6.49">UsrReports<b class="caret"></b></a>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/jQWidgets.aspx")%> ">jQWidgets JS</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/Datatable.aspx")%> ">Datatable-Free</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/PQGrid1.aspx")%> ">PQGrid1(Sample)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/PQGrid2.aspx")%> ">PQGrid2-UsrReports</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/PQGrid3.aspx")%> ">PQGrid3-UsrReports</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/PQGrid31.aspx")%> ">PQGrid31-UsrReports</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/PQGrid32.aspx")%> ">PQGrid32-UsrReports</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/PQGrid4.aspx")%> ">PQGrid4-UsrRequest</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/PQGrid5.aspx")%> ">PQGrid5-UsrRequest(Edit)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/PQGrid6.aspx")%> ">PQGrid6-UsrRequest(E-Mail)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/PQGrid7.aspx")%> ">PQGrid7-UsrRequest(E-Mail)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/PQGrid8.aspx")%> ">PQGrid8-UsrRequest(Weeks)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/WEBGRID/TransLog.aspx")%> ">TPA_TransLog</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/DragDrop/DragDrop1.aspx")%> ">DragDrop1</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/DragDrop/DragDrop2.aspx")%> ">DragDrop2</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/DragDrop/DragDrop3.aspx")%> ">DragDrop3</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/DragDrop/DragDrop4.aspx")%> ">DragDrop4</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/DragDrop/DragDrop5.aspx")%> ">DragDrop5-Release</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/DragDrop/DragDrop51.aspx")%> ">DragDrop5-Release(Resize)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/DragDrop/DragDrop6.aspx")%> ">DragDrop6-Release(Barcode)</a></li>
+                                <li><a href=" <%=ResolveClientUrl("~/DragDrop/DragDrop7.aspx")%> ">DragDrop7-Release(1 Barcode)</a></li>
+                                <li class="divider"></li>
+                                <li><a href=" <%=ResolveClientUrl("~/DragDrop/ClipDrop1.aspx")%> ">ClipboardDrop1</a></li>
+                            </ul>
+                        </li> <!-- End dropdown -->
+                        <li><a href=" <%=ResolveClientUrl("~/XSLT/XMLParse.aspx")%> ">XML Parse</a></li>
+                        </ul>                    
+                    </div>
+                </div> <!-- class="container" -->
+                </div>
+            </nav> <!-- navbar-fixed-top -->
+        </nav> <!-- role="navigation" -->
+    </div>
+    <!-- Static navbar -->
+
+    <div class="container">
+        <asp:ContentPlaceHolder ID="CPH1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+
+    <div id="Footer"></div>
+</div>
+</form>
+</body>
+</html>
