@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<head>
+    <title>Upload Single File</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<script type="text/javascript">
+
+//test run: http://localhost/home/webgrid/dragdropupload.html
+//test run: http://192.168.6.49/webgrid/dragdropupload1.html
+
+    var uri = "http://192.168.6.49/DragDrop/UploadFile.aspx";
+    var totalcount = 0;
+
+
+    $(function () {
+
+        //choose button
+        $('input[name=file]').change(function () {
+            var x = document.getElementsByTagName("form");
+            var file = this.files[0];
+            sendFile(file);
+        });
+
+        //Drag Drop
+        var ul = $('#filelist ul');
+        var fc = 0;     //total file count
+        
+        $('#upload').fileupload({
+        
+            dropZone: $('#dropzone'),
+            autoUpload: true,
+            maxFiles:1,
+            
+            init: function() {
+                this.on("maxfilesexceeded", function(file) {
+                    alert("No more files please!");
+                    this.removeAllFiles();
+                    this.addFile(file);
+                });
+            },
+
+            add: function (e, data) {
+                fc += 1;
+                if (fc == 1) {
+                    var tpl = $('<li class="working"><input type="text" value="0" data-width="48" data-height="48"' +
+                        ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" /><p></p><span></span></li>');
+
+                    tpl.find('p').text(data.files[0].name).append('<i>&nbsp;' + formatFileSize(data.files[0].size) + '</i>');
+                    data.context = tpl.appendTo(ul);
+
+                    tpl.find('input').knob();
+
+                    tpl.find('span').click(function () {
+                        if (tpl.hasClass('working')) {
+                            jqXHR.abort();
+                        }
+                        tpl.fadeOut(function () {
+                            tpl.remove();
+                        });
+                    });
+                    //var jqXHR = data.submit();
+                    data.submit();
+                }
+            },
+
+            progress: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                data.context.find('input').val(progress).change();
+                if (progress == 100) {
+                    data.context.removeClass('working');
+                }
+            },
+
+            fail: function (e, data) {
+                data.context.addClass('error');
+                //if return is not JSON then result is fail instead of done
+                //totalcount = totalcount - 1;
+                //if (totalcount == 0)
+                //{
+                //    $("#finished").show(1000);
+                //}
+            },
+
+            done: function (e, data) {
+                //totalcount = totalcount - 1;
+                //if (totalcount == 0)
+                //{
+                //   $("#finished").show(1000);
+                //}
+            }
+
+        });
+
+        $(document).on('drop dragover', function (e) {
+            e.preventDefault();
+        });
+
+        function formatFileSize(bytes) {
+            if (typeof bytes !== 'number') {
+                return '';
+            }
+
+            if (bytes >= 1000000000) {
+                return (bytes / 1000000000).toFixed(2) + ' GB';
+            }
+
+            if (bytes >= 1000000) {
+                return (bytes / 1000000).toFixed(2) + ' MB';
+            }
+
+            return (bytes / 1000).toFixed(2) + ' KB';
+        }
+
+        $("#final").click(function () {
+            window.close();
+            self.close();
+            //url = "http://192.168.6.49/";
+            //$(location).attr("href", url);
+        });
+
+    });
+
+    window.onload = function () {
+        var dropzone = document.getElementById("dropzone");
+        dropzone.ondragover = dropzone.ondragenter = function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+
+        dropzone.ondrop = function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            var filesArray = event.dataTransfer.files[0];
+            sendFile(filesArray);
+            //var filesArray = event.dataTransfer.files;
+            //totalcount = filesArray.length;
+            //for (var i = 0; i < filesArray.length; i++) {
+            //    sendFile(filesArray[i]);
+            //}
+        }
+    }
+
+    var fnames = [];
+
+    function sendFile(file) {
+        var xhr = new XMLHttpRequest();
+        var fd = new FormData();
+
+        xhr.open("POST", uri, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Handle response.
+                //alert(xhr.responseText); // handle response.
+                //var fname = xhr.responseText + '<br />';
+                //fnames.push(fname);
+                //$('#fileList').html(fnames);
+            }
+        };
+        fd.append('thisfile', file);
+        xhr.send(fd);
+    }
+
+    function clickMe() {
+        $("#file").click();
+    };
+
+</script>
+
+<script src="dragUpload/js/jquery.knob.js"></script>
+<script src="dragUpload/js/jquery.ui.widget.js"></script>
+<script src="dragUpload/js/jquery.iframe-transport.js"></script>
+<script src="dragUpload/js/jquery.fileupload.js"></script>
+
+<style>
+    #dropzone       
+    { 
+        margin-top: 5px;
+        text-align: center;
+        vertical-align: middle;
+        background-color: white;      
+        border: 2px dashed gray; 
+        border-radius: 10px;
+        width:400px; 
+        height:300px; 
+        line-height: 300px; /* <-- this is what you must define */
+    }
+    ul
+    {
+        list-style-type: none;
+    }
+</style>
+
+<body>
+    <br />
+<form id="upload" method="post" action="" enctype="multipart/form-data">
+
+    <!-- html input file -->
+    <input type="file"   id="file" name="file" style="display:none" />
+    <button type="button" class="btn btn-primary btn-sm" id="btnOpenFile" style="width:100px;" onclick="clickMe();">Choose File</button>
+    <input type="hidden" name="action" id="action" value="" />
+    <!-- html input file -->
+
+    <br />
+
+    <div style="float: left;">
+        <div id="dropzone">
+            <strong>Drag & drop your file here...</strong>
+        </div>
+        <div id="finished" style="margin-top: 10px; text-align: right;">
+            <button type="button" id="final" class="btn btn-primary btn-md"> D o n e </button>
+        </div>
+    </div>
+
+    <div style="float: left; margin-left: 10px;">
+        <div id="filelist">
+			<ul>
+				<!-- The file uploads will be shown here -->
+			</ul>
+        </div>
+    </div>
+</form>    
+</body>
+</html>
