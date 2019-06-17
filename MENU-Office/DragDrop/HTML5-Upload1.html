@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Files using XMLHttpRequest</title>
+  
+<script>    
+// http://Home/html5-upload1.html
+
+//$(function(){     // DOM load 
+window.onload = function () {
+
+    var filesSelected = document.getElementById("inputFiles");
+
+	//---file selected
+	filesSelected.addEventListener("change", function () {
+		var tmpTag = "<br /><div><table border=1 style='border-collapse: collapse;border: 2px solid #dddddd;'><tr><th>Name</th><th>Size</th><th>type</th></tr>";
+		var files = filesSelected.files;
+		for (var i = 0, f; f = files[i]; i++) {
+			if (f) {
+				var fileSize = 0;
+				if (f.size > 1024 * 1024)
+					fileSize = (Math.round(f.size * 100 / (1024 * 1024)) / 100).toString() + ' MB';
+				else
+					fileSize = (Math.round(f.size * 100 / 1024) / 100).toString() + ' KB';
+				tmpTag += "<tr><td>" + f.name + "</td>";
+				tmpTag += "<td style='text-align: right'>" + fileSize + "</td>";
+				tmpTag += "<td>" + f.type + "</td></tr>";
+			}
+		}
+		tmpTag += "</table></div><br />";
+		document.getElementById('List').innerHTML = tmpTag;
+    });
+    
+    var startupload = document.getElementById("startupload");
+
+	startupload.addEventListener("click", function () {
+        var fd = new FormData();
+        fd.append("author", "ANY PERSON");                  //add <INPUT FORM> value
+        fd.append("name", "Html 5 File API/FormData");      //add <INPUT FORM> value
+		var files = document.getElementById('inputFiles').files;
+		for (var i = 0, f; f = files[i]; i++) {
+			fd.append("inputFiles", f);    					//add <INPUT FILE> value
+		}
+        
+        var xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener("progress", uploadProgress, false);
+        xhr.addEventListener("load",  uploadComplete, false);
+        xhr.addEventListener("error", uploadFailed, false);
+        xhr.addEventListener("abort", uploadCanceled, false);
+        
+        xhr.open("POST", "http://Home/DragDrop/UploadMultiFile.aspx");
+        xhr.send(fd);
+    });
+  
+    function uploadProgress(evt) {
+        if (evt.lengthComputable) {
+            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+            document.getElementById('progressNumber').innerHTML = percentComplete.toString() + '%';
+        }
+        else {
+            document.getElementById('progressNumber').innerHTML = 'unable to compute';
+        }
+    }
+
+    function uploadComplete(evt) {
+        /* This event is raised when the server send back a response */
+        alert(evt.target.responseText);
+    }
+
+    function uploadFailed(evt) {
+        alert("There was an error attempting to upload the file.");
+    }
+
+    function uploadCanceled(evt) {
+        alert("The upload has been canceled by the user or the browser dropped the connection.");
+    }   
+    
+//}); 
+}; 
+
+</script>   
+	
+</head>
+<body>
+	<form id="form1" enctype="multipart/form-data" method="post" action="Upload.aspx">
+		<div>
+			<label for="inputFiles">Select a File to Upload</label><br />
+			<input type="file" multiple name="inputFiles" id="inputFiles" />
+		</div>
+		<div id="List"></div>
+		<div>
+			<input type="button" id="startupload" value="Upload" />
+		</div>
+		<div id="progressNumber"></div>
+	</form>
+  
+</body>
+</html>
