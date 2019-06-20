@@ -1,1 +1,0 @@
-<%@ Page Language="C#" AutoEventWireup="true" CodeFile="backend_HL7Validate_AltaMed.aspx.cs" Inherits="backend_HL7Validate_AltaMed" %>
