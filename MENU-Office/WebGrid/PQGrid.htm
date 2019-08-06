@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<!--jQuery dependencies-->
+<!--jQuery dependencies-->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/themes/base/jquery-ui.css" />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>    
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+<!--PQ Grid files-->
+    <link  href="PQGrid/pqgrid.min.css" rel="stylesheet" />
+    <script src="PQGrid/pqgrid.min.js"></script>
+    <link  href="PQGrid/pqgrid.css" rel="stylesheet" />
+    
+<script>
+
+//http://192.168.6.49/webgrid/PQGrid.htm
+
+    $(function () {
+
+        function pqDatePicker(ui) {
+            var $this = $(this);
+            $this
+                .css({ zIndex: 3, position: "relative" })
+                .datepicker({
+                    yearRange: "-5:+0", //5 years prior to present.
+                    changeYear: true,
+                    changeMonth: true,
+                    dateFormat : 'yy-mm-dd',    //2016-01-01
+                    defaultDate: new Date(),
+                    //showButtonPanel: true,
+                    onClose: function (evt, ui) {
+                        $(this).focus();        // press tab key after keyboard type or click date on calenda
+                    }
+                });
+            //default date
+            $this.filter(".pq-from").datepicker("option", "defaultDate", new Date("2010-01-01"));
+        };
+
+        var colM = [
+            { title: "RepId",    width:  50, dataType: "integer",  dataIndx: "UsrRepId" },
+            { title: "Type",     width:  80, dataType: "string",   dataIndx: "UsrRepType",
+                filter: { type: "select",
+                                condition: 'equal',
+                                prepend: { '': '--Select--' },
+                                valueIndx: "UsrRepType", labelIndx: "UsrRepType",
+                                listeners: ['change']
+                        }
+            },
+            { title: "State",    width:  30, dataType: "string",   dataIndx: "LicState" },
+            { title: "MsgCode",  width:  60, dataType: "integer",  dataIndx: "TPA_ResMsgCode", align: "center" },
+            { title: "Status",   width:  60, dataType: "integer",  dataIndx: "RepStatus" , align: "center" },
+            { title: "Requesting Company",  width: 200, dataType: "string",   dataIndx: "Company",
+                filter: { type: "select",
+                                condition: 'equal',
+                                prepend: { '': '--Select--' },
+                                valueIndx: "Company", labelIndx: "Company",
+                                listeners: ['change']
+                        }
+            },
+            { title: "Create Date",   width: 110, dataType: "string",   dataIndx: "RepCreated", align: "center",
+                filter: { type: 'textbox', condition: "begin", init: pqDatePicker, listeners: ['change'] }
+            },
+            { title: "SSN",             width: 90, dataType: "string",   dataIndx: "SSN", align: "center",
+                render: function (ui) {
+                    var cellData = ui.rowData[ui.dataIndx];
+                    var s1 = cellData.substring(0, 3);
+                    var s2 = cellData.substring(3, 5);
+                    var s3 = cellData.substring(5, 9);
+                    var s4 = s1 + '-' + s2 + '-' + s3;
+                    return s4;
+                }
+            },
+            { title: "Driver",      width: 120, dataType: "string",   dataIndx: "DriverName"  },
+            { title: "Client",      width:  50, dataType: "integer",  dataIndx: "CliId", align: "center",
+                render: function (ui) {
+                    return ui.cellData > 0 ? ui.cellData : "";
+                }
+            },
+            { title: "UserId",      width:  60, dataType: "integer",  dataIndx: "UserId", align: "center" },
+            { title: "User",        width: 100, dataType: "string",   dataIndx: "UserName"  },
+            { title: "User EMail",  width: 150, dataType: "string",   dataIndx: "UserEMail" },
+            { title: "Notes",       width:  10, dataType: "string",   dataIndx: "Notes",   hidden: true },
+            { title: "MsgCode",     width:  10, dataType: "string",   dataIndx: "MsgCode", hidden: true }
+        ];
+        
+        var dataModel = {
+            location: "local",
+            sorting: "local",            
+            sortIndx: "RepCreated",
+            sortDir: "down",
+        };
+        
+        var obj = {
+            title: "Shipping Orders",
+            width: 1200, height: 460,
+            dataModel: dataModel,
+            colModel: colM,
+            freezeCols: 5,
+            pageModel: { type: "local", rPP: 20, rPPOptions: [20, 50, 100, 150, 200] },
+            flexHeight: true,
+            wrap: false,
+            hwrap: false,
+            showBottom: false,
+            editable: false,
+            //selectionModel: { mode: 'single' },
+            selectionModel: { type: 'cell' },
+            filterModel: { on: true, mode: "AND", header: true },
+            scrollModel: { horizontal: true },
+            resizable: true,
+            draggable: true,
+            columnBorders: true
+        };
+        obj.width = 1100;
+        obj.height = 460;
+        obj.title = "UsrReport Table";
+        obj.showBottom = true;
+        //obj.collapsible = false;
+        
+        var $grid = $("#grid_array").pqGrid(obj);   // Create dataModel
+        
+        //load all data at once
+        $grid.pqGrid("showLoading");
+        $.ajax({
+            url: "/webgrid/UsrReportStatus.aspx",
+            headers: { 'driverfacts': 'PQGrid' },
+          //url: "/Operations/PQGrid/UsrReportStatus.aspx?days=60",
+            cache: false,
+            async: true,
+            dataType: "JSON",
+            success: function (response) {
+                $grid.pqGrid("option", "dataModel.data", response.data);
+                
+                //filter.options: UsrRepType
+                var column = $grid.pqGrid("getColumn", { dataIndx: "UsrRepType" });
+                var filter = column.filter;
+                filter.cache = null;
+                filter.options = $grid.pqGrid("getData", { dataIndx: ["UsrRepType"] });
+
+                //filter.options: Company
+                var column = $grid.pqGrid("getColumn", { dataIndx: "Company" });
+                var filter = column.filter;
+                filter.cache = null;
+                filter.options = $grid.pqGrid("getData", { dataIndx: ["Company"] });
+
+                $grid.pqGrid("refreshDataAndView");
+                $grid.pqGrid("hideLoading");
+            }
+        });
+       
+        function new_Date(newday) {
+            var d = new Date();
+            d.setDate(d.getDate() + newday * -1);
+            var yr = d.getFullYear();
+            var mm = d.getMonth() + 1;
+            var dd = d.getDate();
+            if (mm < 10) mm = "0" + mm;
+			if (dd < 10) dd = "0" + dd;
+            var newday = yr + "-" + mm + "-" + dd;
+            return newday;
+        }
+
+        function apply_date(newday) {
+            $("#grid_array").pqGrid( "filter", { 
+                oper: 'replace', 
+                data: [ 
+                    { dataIndx: 'RepCreated', condition: 'great', value: newday }
+                ] 
+            });        
+        }
+
+        $(".DisplayDates").change(function () {
+            var val = $('.DisplayDates:checked').val();
+            //alert(val);
+
+            //apply filter by new date
+            var newday = new_Date(val);
+            apply_date(newday);
+
+            //clear select
+            var column = $grid.pqGrid("getColumn", { dataIndx: "UsrRepType" });
+            var filter = column.filter;
+            filter.cache = null;
+            filter.value = "--Select--";
+            filter.options = $grid.pqGrid("getData", { dataIndx: ["UsrRepType"] });
+            
+            //clear select
+            var column = $grid.pqGrid("getColumn", { dataIndx: "Company" });
+            var filter = column.filter;
+            filter.cache = null;
+            filter.value = "--Select--";
+            filter.options = $grid.pqGrid("getData", { dataIndx: ["Company"] });
+            
+            $grid.pqGrid("refreshDataAndView");
+
+        });
+
+        //Popup Display: notes
+        $( "#grid_array" ).on( "pqgridcellclick", function( event, ui ) {
+            var repid = ui.rowData["UsrRepId"].toString();
+            var drivername = ui.rowData["DriverName"];
+            if (ui.rowData["Notes"].length > 0 && ui.colIndx == 0)
+            {
+                $("#noteTable").html(ui.rowData["Notes"]);
+                $("#popup-dialog1").dialog({ width:'600px', title: "RepId:" + repid + ",  " + drivername
+                }).dialog("open");
+            }
+        });
+        
+        //Popup Display: TPA_MsgCode
+        $( "#grid_array" ).on( "pqgridcellclick", function( event, ui ) {
+            var repid = ui.rowData["UsrRepId"].toString();
+            var drivername = ui.rowData["DriverName"];
+            if (ui.rowData["MsgCode"].length > 0 && ui.colIndx == 2)
+            {
+                $("#msgTable").html(ui.rowData["MsgCode"]);
+                $("#popup-dialog2").dialog({ width:'600px', title: "RepId:" + repid + ",  " + drivername
+                }).dialog("open");
+            }
+        });
+        
+    });
+    
+</script>    
+
+<div style="margin:auto;text-align:center;">
+<br />
+<p style="font-family:Arial;Times New Roman;font-size:14px;">
+<label for="Display range">Display Data: </label>
+&nbsp;&nbsp;&nbsp;<input type="radio" name="Dates" class="DisplayDates" value="0"  > Today</input>
+&nbsp;&nbsp;&nbsp;<input type="radio" name="Dates" class="DisplayDates" value="1"  > Yesterday</input>
+&nbsp;&nbsp;&nbsp;<input type="radio" name="Dates" class="DisplayDates" value="7"  > 7 days</input>
+&nbsp;&nbsp;&nbsp;<input type="radio" name="Dates" class="DisplayDates" value="30" > 30 days</input>
+&nbsp;&nbsp;&nbsp;<input type="radio" name="Dates" class="DisplayDates" value="60" > 60 days</input>
+&nbsp;&nbsp;&nbsp;<input type="radio" name="Dates" class="DisplayDates" value="120" > 120 days</input>
+&nbsp;&nbsp;&nbsp;<input type="radio" name="Dates" class="DisplayDates" value="180" > 180 days</input>
+&nbsp;&nbsp;&nbsp;<input type="radio" name="Dates" class="DisplayDates" value="365" > 365 days</input>
+</p>
+</div>
+
+<div id="grid_array" style="margin:20px auto;"></div>
+
+<style>
+    .tdformat{
+        text-align: center;
+        width: 100px;
+        border: 1px solid #993300;
+        background-color:#D7E4F2;
+        font-size:12px;
+        padding:5px;
+    }
+    .number{
+        text-align: center;
+        border: 1px solid #993300;
+        background-color:#D7E4F2;
+        font-size:12px;
+        padding:10px;
+    }
+    .notes{
+        text-align: left;
+        border: 1px solid #993300;
+        background-color:#D7E4F2;
+        font-size:12px;
+        padding:5px;
+    }
+</style>
+
+<div id="popup-dialog1" style="display:none;">
+    <div id="noteTable">
+</div>
+
+<div id="popup-dialog2" style="display:none; background-color:#F6DFDD">
+    <div id="msgTable">
+</div>
+
+</head>
+<body>
+
+</html>

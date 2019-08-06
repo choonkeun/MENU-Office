@@ -1,0 +1,21 @@
+
+    // ParamQuery Clear All Field Filter - not working
+    // http://paramquery.com/api/v103
+
+    function clearFilter() {
+        var CM = $grid.pqGrid( "option", "colModel" );            
+        for(var i=0, len = CM.length; i < len; i++){
+            var column = CM[i];
+            if(column.filter) {
+                column.filter.value = null;
+                column.filter.cache = null;
+            }
+        }
+        $grid.pqGrid({
+            oper: 'replace',
+            data: []
+        });        
+        $grid.pqGrid( "option", "colModel", CM );
+        $grid.pqGrid("refreshDataAndView");
+        return true;
+    };
