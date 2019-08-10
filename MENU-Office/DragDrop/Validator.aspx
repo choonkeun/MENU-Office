@@ -41,6 +41,8 @@
             if (xhr.readyState == 4 && xhr.status == 200) {
                 //alert(xhr.responseText);      //results display
                 var outText = xhr.responseText;
+                
+                //download to download folder
                 var blob = new Blob([xhr.responseText]);
                 var link = document.createElement('a');
                 link.href = window.URL.createObjectURL(blob);
@@ -48,6 +50,7 @@
                 link.style.display = 'none';
                 document.body.appendChild(link);
                 link.click();
+                
                 $('#outText').html(outText);    //results display
                 $('#dragdrop').hide();
                 $('#pnTEXT').show();
