@@ -32,7 +32,7 @@
     }
     
     function sendFile(fd) {
-        var uri = "http://localhost/backend_Validator";
+        var uri = "http://localhost/backend_Validator.aspx";
         var xhr = new XMLHttpRequest();
         fd.append("savedFolder", $('#savedFolder').val());
         xhr.open("POST", uri, true);
