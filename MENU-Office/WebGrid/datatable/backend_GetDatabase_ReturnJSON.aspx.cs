@@ -1,3 +1,6 @@
+//#define HOST
+#define LOG
+
 using System;
 using System.Collections.Generic;
 using System.Web;
@@ -10,11 +13,6 @@ using ExtensionMethods;
 public partial class backend_GetDatabase_ReturnJSON: System.Web.UI.Page
 {
     public string folderPath = string.Empty;
-    public string dbServer = string.Empty;
-    public string dbDatabase = string.Empty;
-    public string dbUserID = string.Empty;
-    public string dbPassword = string.Empty;
-
     protected void Page_Load(object sender, EventArgs e)
     {
         folderPath = HttpContext.Current.Server.MapPath("~/temp/");
@@ -22,6 +20,11 @@ public partial class backend_GetDatabase_ReturnJSON: System.Web.UI.Page
         bool OK = false;
         string action = string.Empty;
         string contentType = string.Empty;
+
+        string dbServer = string.Empty;
+        string dbDatabase = string.Empty;
+        string dbUserID = string.Empty;
+        string dbPassword = string.Empty;
 
         string inputValue = string.Empty;
         string serverId = string.Empty;
@@ -65,14 +68,19 @@ public partial class backend_GetDatabase_ReturnJSON: System.Web.UI.Page
 
             if (OK && formData.TryGetValue("serverid", out serverId))
             {
+#if HOST
                 if (serverId == "adventureworks") serverId = "HOST";
                 if (serverId == "northwind") serverId = "HOST";
-                //if (serverId == "adventureworks") serverId = "5490L8";
-                //if (serverId == "northwind") serverId = "192.168.104.10";
-
-                //if (serverId == "production") serverId = "HOST";
-                //if (serverId == "quality") serverId = "HOST";
-                //if (serverId == "develop") serverId = "HOST";
+                if (serverId == "production") serverId = "HOST";
+                if (serverId == "quality") serverId = "HOST";
+                if (serverId == "develop") serverId = "HOST";
+#else
+                if (serverId == "adventureworks") serverId = "5490L8";
+                if (serverId == "northwind") serverId = "192.168.104.10";
+                if (serverId == "production") serverId = "5490L8";
+                if (serverId == "quality") serverId = "5490L8";
+                if (serverId == "develop") serverId = "5490L8";
+#endif
             }
 
             if (OK && formData.TryGetValue("databaseid", out databaseId))
@@ -91,8 +99,11 @@ public partial class backend_GetDatabase_ReturnJSON: System.Web.UI.Page
                     dbServer = serverId;
                     dbDatabase = databaseId;
                     dbUserID = "sa";
-                    //dbPassword = "!!11qqAA";
+#if HOST
                     dbPassword = "1";
+#else
+                    dbPassword = "!!11qqAA";
+#endif
                 }
                 if (databaseId == "northwind")
                 {
@@ -205,11 +216,10 @@ public partial class backend_GetDatabase_ReturnJSON: System.Web.UI.Page
         return outString;
     }
 
-    public string DataTableToJSON(DataTable table)
-    {
-        string JSONString = string.Empty;
-        JSONString = JsonConvert.SerializeObject(table);
-        return JSONString;
-    }
+    Func<DataTable, String> DataTableToJSON = (table) => JsonConvert.SerializeObject(table);
+    //public string DataTableToJSON(DataTable table)
+    //{
+    //    return JsonConvert.SerializeObject(table);
+    //}
 }
 

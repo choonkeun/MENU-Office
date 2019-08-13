@@ -15,9 +15,6 @@
     $.extend(true, $.fn.dataTable.defaults, {
         searching: true,
         paging: true,
-        ordering: false,
-        colReorder: false,
-        responsive: false,
         processing: true,
         "scrollX": true
     });
@@ -42,20 +39,6 @@
         { "data": "CountryRegionName",      title : "CountryRegionName" },
         { "data": "AdditionalContactInfo",  title : "AdditionalContactInfo" }
     ];                               
-                                     
-    var columns_NorthWind = [         
-         { "data": "CustomerID",        title :  "CustomerID" },           
-         { "data": "CompanyName",       title :  'Company'  },
-         { "data": "ContactName",       title :  "ContactName" },
-         { "data": "ContactTitle",      title :  "ContactTitle" },
-         { "data": "Address",           title :  "Address" },
-         { "data": "City",              title :  "City" },
-         { "data": "Region",            title :  "Region" },
-         { "data": "PostalCode",        title :  "PostalCode" },
-         { "data": "Country",           title :  "Country" },
-         { "data": "Phone",             title :  "Phone" },
-         { "data": "Fax",               title :  "Fax" }
-    ];
     
     $(document).ready(function ()
     {
@@ -76,14 +59,14 @@
             switch (serverValue) {
                 case 'AdventureWorks':
                     fd.append("databaseId", 'Adventure2014');
-                    table_Initialization(columns_Adventure);
-                    Get_Database(fd);
+                    var table = table_Initialization(columns_Adventure);
+                    Get_Database(fd, table);
                     break;
                     
                 case 'NorthWind':
                     fd.append("databaseId", 'North2012');
-                    table_Initialization(columns_NorthWind);
-                    Get_Database(fd);
+                    var table = table_Initialization(columns_NorthWind);
+                    Get_Database(fd, table);
                     break;
             }
         });
@@ -106,31 +89,30 @@
             sort    : true,
             cache   : true,
             scrollX : true,
-            //scrollY : "300px",
-            scrollCollapse: true,
-            paging  : true,
+            //scrollCollapse: true,
+            //dom: 'T<"clear">lfrtip',
+            //order: [ 0, 'asc' ],
             
             lengthMenu    : [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
             displayLength : 5,
             
             data    : null,
             columns : sourceCols,
-            
-            //fixedColumns: true,
             fixedColumns: {
                 leftColumns: 1
             }
-            
         });
+        $('.dataTables_filter').remove();
         
         setTimeout(function() {
             $.fn.dataTable.tables( { visible: true, api: true } )
             .columns.adjust().fixedColumns().relayout();
         }, 200);
 
+        return table;
     }
 
-    function Get_Database(fd) {
+    function Get_Database(fd, table) {
         $('#pnJSON').hide();
 
         //var uri = "http://webhome/dataTable/backend_GetDatabase_ReturnJSON.aspx";
@@ -150,20 +132,49 @@
                 {
                     var json_data = JSON.parse(xhr.responseText);
                     $('#example').DataTable().clear().rows.add(json_data).draw();
-
+                    
+                    table.initComplete = Build_Filter(table);
+                    
                     $('#pnJSON').show();
                 }
-
+                                
                 $('#outText').html(outText);    //results display
                 //$('#pnTEXT').show();
             }
         };
     }
 
+    // https://jsfiddle.net/cr78t379/3/
+    // data should exist before 'build filter'
+    
+    function Build_Filter (table) {
+        var rows = 1;
+        
+        table.columns().every( function () {
+            var column = this;
+            $('#' + rows).remove();
+            var select = $("<br /><select id=" + rows + "><option value=''></option></select>")
+                .appendTo( $(column.header()))
+                .on( 'change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex(
+                        $(this).val()
+                    );
+                    column.search( val ? '^'+val+'$' : '', true, false ).draw();
+                });
+
+            column.data().unique().sort().each( function ( d, j ) {
+                select.append( '<option value="'+d+'">'+d+'</option>' )
+            });
+
+            rows = rows + 1;
+        });
+        table.columns().draw();
+    }
+    
 </script>
 
 <input type="hidden" name="action" id="action" value="" /> 
-<input type="hidden" name="action" id="programId" value="multiple" /> 
+<input type="hidden" name="action" id="programId" value="filterTitle" /> 
 <input type="hidden" name="action" id="databaseId" value="" /> 
 
 <style>
@@ -238,7 +249,7 @@
 <div class="row">
 <!--align center -->
   
-    <div style="padding-bottom: 10px;"><h2>Get Data From Multiple Server</h2></div>
+    <div style="padding-bottom: 10px;"><h2>Get Data and Filter Title</h2></div>
 
     <fieldset class="dt-border">
     <legend class="dt-border">Batch Informations:</legend>
@@ -262,7 +273,7 @@
     </fieldset>
    
     <div id="pnJSON"  class="gridview">
-        <table id="example" class="display" style="width:100%"></table>
+        <table id="example" class="display" style="width:100%" cellspacing="0"></table>
     </div>
 
     <div id="pnTEXT" >
