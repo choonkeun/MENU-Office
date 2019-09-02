@@ -1,0 +1,113 @@
+<html>
+<head>
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('input[name="skills"]').click(function () {
+                getSelectedCheckBoxes('skills');
+            });
+
+            $('input[name="cities"]').click(function () {
+                getSelectedCheckBoxes('cities');
+            });
+
+            var getSelectedCheckBoxes = function (groupName) {
+                var result = $('input[name="' + groupName + '"]:checked');
+                if (result.length > 0) {
+                    var resultString = result.length + " checkboxe(s) checked<br/>";
+                    result.each(function () {
+                        resultString += $(this).val() + " - " + $(this).text() + "<br/>";
+                    });
+                    $('#div' + groupName).html(resultString);
+                }
+                else {
+                    $('#div' + groupName).html("No checkbox checked");
+                }
+            };
+
+            
+            $('#selectCountries').change(function () {
+                var selectedOptions = $('#selectCountries option:selected');
+                if (selectedOptions.length > 0) {
+                    var resultString = '';
+                    selectedOptions.each(function () {
+                        resultString += 'Value = ' + $(this).val() + ', Text = ' + $(this).text() + '<br/>';
+                    });
+                    $('#divResult1').html(resultString);
+                }
+            });
+
+            $('li').click(function() {
+                $('li').each(function () {
+                    $('#divResult2').html($('#divResult2').html() + '<br/>' + $(this).text())
+                });
+                
+                //$('li').text('MY VALUE').css('color', 'blue').slideUp(1000).slideDown(1000).attr('title', 'MY TITLE');
+                $('li').css('color', 'blue').slideUp(1000).slideDown(1000).attr('title', 'MY TITLE');
+                
+                var result = '';
+                $('ul li').each(function () {
+                    result += 'title = ' + $(this).attr('title') + '<br/>';
+                    result += 'style = ' + $(this).attr('style') + '<br/>';
+                    result += 'id = ' + $(this).attr('id') + '<br/><br/>';
+                });
+                $('#divResult3').html(result);
+                
+            });
+            
+        });
+    </script>
+</head>
+<body style="font-family:Arial">
+    Skills :
+    <input type="checkbox" name="skills" value="JavaScript1" />JavaScript
+    <input type="checkbox" name="skills" value="jQuery1" />jQuery
+    <input type="checkbox" name="skills" value="C#1" />C#
+    <input type="checkbox" name="skills" value="VB1" />VB
+    <br /><br />
+    Selected Skills:
+    <div id="divskills"></div>
+    <br />
+    <hr>
+
+    Preferred Cities :
+    <input type="checkbox" name="cities" value="New York" />New York
+    <input type="checkbox" name="cities" value="New Delhi" />New Delhi
+    <input type="checkbox" name="cities" value="London" />London
+    <br /><br />
+    Selected Cities:
+    <div id="divcities"></div>
+    <br /><br />
+    
+    <hr>
+    <div style="font-family:Arial">
+        <select id="selectCountries" multiple="multiple">
+            <option selected="selected" value="USA">United States</option>
+            <option value="IND">India</option>
+            <option value="UK">United Kingdom</option>
+            <option value="CA">Canada</option>
+            <option value="AU">Australia</option>
+        </select>
+        <br /><br />
+        <div id="divResult1"></div>
+    </div>
+    <br /><br />
+    
+    <hr>
+    click below list
+    <div style="font-family:Arial">
+        <ul>
+            <li title="US">US</li>
+            <li style="font-family:Arial">India</li>
+            <li id="resultSpan">UK</li>
+            <li>Canada</li>
+            <li>Australia</li>
+        </ul>
+        <div id="divResult2"></div>
+        <br /><br />
+        <div id="divResult3"></div>
+    </div>
+    
+</body>
+</html>

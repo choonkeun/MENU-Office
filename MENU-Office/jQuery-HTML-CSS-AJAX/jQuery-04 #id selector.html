@@ -5,23 +5,26 @@
 </head>
 <script>
     $(document).ready(function () {
-    
-//https://www.youtube.com/watch?v=InSYKYCw85s&list=PL6n9fhu94yhVDV697uvHpavA3K_eWGQap&index=5
-    
+
+// https://www.youtube.com/watch?v=InSYKYCw85s&list=PL6n9fhu94yhVDV697uvHpavA3K_eWGQap&index=5
+
         $("#table1 tr:even").css( "background-color", "cyan").css("color", "red");
         $("#table1 tr:odd").css( {"background-color": "#4C8BF5", "color":"#fff"} );
-    
-        
+
+
         //$("#table2 tr:even").css( "background-color", "cyan").css("color", "red");
         $('#table2 tr:even').css( { "background-color": "cyan", "color":"red", "font-weight": "bold", "font-size": "25px" } );
         $("#table2 tr:odd").css( "background-color", "yellow");
-        
+
         $('div a').css('background-Color', 'yellow').css("color", "red");
-        
+
         $(".big").css("border", "2px solid green");
         $("div.small, .big").css("border", "2px solid red");
         $(".small.big").css("border", "2px solid blue");
-        
+
+        $("span a").css("border", "2px solid blue");
+        $("span ul").css("border", "2px solid red");
+
         $('[title="DIVTitle"]').css({ "background-color": "cyan", "color":"red", "font-weight": "bold", "font-size": "25px" });
     });
 </script>
@@ -35,7 +38,7 @@
         <tr><td>.NET1</td><td>JQUERY1</td><td>CSS1</td></tr>
         <tr><td>AJAX2</td><td>CSS2</td><td>HTML2</td></tr>
         <tr><td>.NET3</td><td>JQUERY3</td><td>CSS3</td></tr>
-    </table>	
+    </table>
 <br />
     <table id="table2" border="1">
         <tbody>
@@ -46,12 +49,18 @@
     </table>
 <br />
 
-    <div title="divTitle" class="small big">1.Red DIV   </div>
-    <div title="DIVTitle" class="small">    2.Green DIV </div>
-    <div title="divTitle" class="big">      3.Normal Div</div>
-    
-    <div><a href="http://yahoo.com">Yahoo</a> </div>
-<br/> 
+    <div title="divTitle" class="small big">1.Red DIV    &nbsp;&nbsp;&nbsp;(title="divTitle")</div>
+    <div title="DIVTitle" class="small">    2.Green DIV  &nbsp;&nbsp;&nbsp;(title="DIVTitle")</div>
+    <div title="divTitle" class="big">      3.Normal Div &nbsp;&nbsp;&nbsp;(title="divTitle")</div>
+<br />
+
+    <span><a href="http://yahoo.com">Yahoo - (span > a) </a> </span>
+    <span><a href="http://google.com">google - (span > a) </a> </span>
+    <span><ul><li href="http://google.com">google - (span > li > a) </li></ul></span>
+<br />
+
+    <div><a href="http://yahoo.com">Yahoo - (Div > a) </a> </div>
+<br/>
 
 $('td') // Selects all td elements <br/>
 $('div a') // Select all anchor elements that are descendants of div element<br/>
@@ -69,13 +78,13 @@ $('div[title="divTitle"]') // Selects all div elements that have title attribute
 $('div[title]').css('border', '5px solid red'); <br/>
 $('[title="div1Title"]').css('border', '5px solid red'); <br/>
 <br/>
-Selects all div elements with title attribute value - divTitle, 
+Selects all div elements with title attribute value - divTitle,
 <br/>and style attribute value - background-color:red, and sets 5px solid black border<br/>
 $('div[title="divTitle"][style="background-color:red"]').css('border', '5px solid black'); <br/>
 <br/>
 Selects all div elements with either title or style attributes, and sets 5px solid black border<br/>
 $('div[title], [style]').css('border', '5px solid black'); <br/>
-
+<br/>
 
 </body>
 </html>

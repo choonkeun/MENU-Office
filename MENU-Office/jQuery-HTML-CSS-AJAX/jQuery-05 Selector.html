@@ -1,0 +1,64 @@
+<html>
+<head>
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+</head>
+<script>
+    $(document).ready(function () {
+
+// https://www.youtube.com/watch?v=InSYKYCw85s&list=PL6n9fhu94yhVDV697uvHpavA3K_eWGQap&index=5
+
+        $("span p:even").css( {"background-color": "#4C8BF5", "color":"#fff"} );
+        $("span p:nth-child(2)").css( { "background-color": "cyan" } );
+        
+        $('#table1 tr:nth-child(1) td:nth-child(3)').css( { "background-color":"yellow", "font-weight": "bold", "font-size": "18px" } );
+        $('td:nth-child(1)').css( {"background-color": "#4C8BF5", "color":"#fff"} );
+        $('#table1 tr:nth-child(3)').css( { "background-color": "cyan", "color":"red", "font-weight": "bold", "font-size": "25px" } );
+
+        $('div[title]').filter(function () {
+            return $(this).attr('title').toLowerCase() == 'divtitle';
+        }).css('border', '1px solid green');
+    });
+</script>
+<body>
+
+<pre>
+    $("span p:even").css( {"background-color": "#4C8BF5", "color":"#fff"} );
+    $("span p:nth-child(2)").css( { "background-color": "cyan" } );
+    
+    $('#table1 tr:nth-child(1) td:nth-child(3)').css( { "background-color":"yellow", "font-weight": "bold", "font-size": "18px" } );
+    $('td:nth-child(1)').css( {"background-color": "#4C8BF5", "color":"#fff"} );
+    $('#table1 tr:nth-child(3)').css( { "background-color": "cyan", "color":"red", "font-weight": "bold", "font-size": "25px" } );
+    
+    $('[title  = "div1Title"]')   // Selects all elements that have title attribute value equal to div1Title
+    $('[title != "div1Title"]')   // Selects all elements that have title attribute value not equal to div1Title
+    $('[title *= "Title"]')       // Selects all elements that have title attribute value containing the given substring - Title
+    $('[title ~= "mySpan"]')      // Selects all elements that have title attribute value containing the given word - mySpan, delimited by spaces
+    $('[title |= "myTitle"]')     // Selects all elements that have title attribute value equal to myTitle or starting with myTitle followed by a hyphen (-)
+    $('[title ^= "div"]')         // Selects all elements that have title attribute value starting with div
+    $('[title $= "Heading"]')     // Selects all elements that have title attribute value ending with Heading    
+    
+    $('div[title]').filter(function () {
+        return $(this).attr('title').toLowerCase() == 'divtitle';
+    }).css('border', '1px solid green');
+</pre>
+
+<br />
+    <span>
+        <p>The first paragraph.</p>
+        <p>The second paragraph.</p>
+    </span>
+<br />
+
+    <table id="table1" border="1">
+        <tr><td>AJAX0</td><td>CSS0</td><td>HTML0</td></tr>
+        <tr><td>.NET1</td><td>JQUERY1</td><td>CSS1</td></tr>
+        <tr><td>AJAX2</td><td>CSS2</td><td>HTML2</td></tr>
+        <tr><td>.NET3</td><td>JQUERY3</td><td>CSS3</td></tr>
+    </table>
+<br />
+
+    <div title="divTitle" class="small big">1.Red DIV    &nbsp;&nbsp;&nbsp;(title="divTitle")</div>
+    <div title="DIVTitle" class="small">    2.Green DIV  &nbsp;&nbsp;&nbsp;(title="DIVTitle")</div>
+    <div title="divtitle" class="big">      3.Normal Div &nbsp;&nbsp;&nbsp;(title="divtitle")</div>
+<br />
