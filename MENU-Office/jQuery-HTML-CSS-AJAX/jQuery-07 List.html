@@ -7,6 +7,7 @@
             $('ul').on('click', 'li', function () {
                 $('#index1').html( $(this).index() + ': ' +$(this).text() );
                 $(this).fadeOut(500);
+                CountLiVisible();
             });
 
             $('#btnAdd').on('click', function () {
@@ -16,13 +17,24 @@
                 var count = $('ul').children().length;
                 //alert(count);
                 
-                results = "";
-                $('ul li').each(function() {
-                    results += $(this).text() + '<br />';
-                });
-                $('#results').html(results);
+                CountLiVisible();
+                //results = "";
+                //$('ul > li:visible').each(function() {
+                //    results += $(this).text() + '<br />';
+                //});
+                //$('#results').html(results);
             });
         });
+
+        function CountLiVisible()
+        {
+            results = "";
+            $('ul').find('li:visible').each(function() {
+                results += $(this).text() + '<br />';
+            });
+            $('#results').html(results);
+        }
+
     </script>
 </head>
 <body style="font-family:Arial">
