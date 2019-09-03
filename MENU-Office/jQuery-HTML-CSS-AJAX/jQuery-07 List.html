@@ -1,0 +1,38 @@
+<html>
+<head>
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('ul').on('click', 'li', function () {
+                $('#index1').html( $(this).index() + ': ' +$(this).text() );
+                $(this).fadeOut(500);
+            });
+
+            $('#btnAdd').on('click', function () {
+                var liCount = $('ul li').length;
+                $('ul').append('<li>New List Item' + liCount + '</li>');
+                
+                var count = $('ul').children().length;
+                //alert(count);
+                
+                results = "";
+                $('ul li').each(function() {
+                    results += $(this).text() + '<br />';
+                });
+                $('#results').html(results);
+            });
+        });
+    </script>
+</head>
+<body style="font-family:Arial">
+    <div id="index1"></div>
+    <br />
+    <input id="btnAdd" type="button" value="Add a New List Item" />
+    <ul>
+        <li>List Item</li>
+        <li>List Item</li>
+    </ul>
+    <div id="results"></div>
+</body>
+</html>
