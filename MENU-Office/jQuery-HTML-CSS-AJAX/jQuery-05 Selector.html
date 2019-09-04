@@ -41,6 +41,28 @@
     $('div[title]').filter(function () {
         return $(this).attr('title').toLowerCase() == 'divtitle';
     }).css('border', '1px solid green');
+    
+    //--
+    var aa = $("input[name='optradio']");   //var aa = $('[name = "optradio"]');
+    aa.each(function () {
+        alert( $(this).val() );
+    });
+    alert( $('[name="optradio"]:eq(0)').val() );    //index: zero base
+    
+    $('[name = "optradio"]:eq(2)').prop( "checked", true );
+
+    //--
+    var serverValue = $("input[name=optradio]:checked").val();
+
+    var prcID = $(row).find('td').eq(0).text();
+    var prcID = $(this).closest('tr').find('td:eq(0)').text();
+    var prcName = $(this).closest('tr').find('td:eq(1)').text();
+
+    var prcTitle = $(this).find('td:eq(2)').find("span").attr('title'); 
+
+    $('td', row).eq(5).addClass('highlight');
+    $(row).find('td:eq(11)').css('color', 'red').css('font-weight', 'bold');
+    
 </pre>
 
 <br />
@@ -62,3 +84,9 @@
     <div title="DIVTitle" class="small">    2.Green DIV  &nbsp;&nbsp;&nbsp;(title="DIVTitle")</div>
     <div title="divtitle" class="big">      3.Normal Div &nbsp;&nbsp;&nbsp;(title="divtitle")</div>
 <br />
+
+    <div class="btn-group" data-toggle="buttons">
+      <label class="btn"><input type="radio" name="optradio" value="Pubs" />Pubs</label>
+      <label class="btn"><input type="radio" name="optradio" value="NorthWind" />NorthWind</label>
+      <label class="btn active"><input type="radio" name="optradio" value="AdventureWorks" checked="checked" />AdventureWorks</label>
+    </div>
