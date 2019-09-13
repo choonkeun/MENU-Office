@@ -24,6 +24,7 @@
 
         $("span a").css("border", "2px solid blue");
         $("span ul").css("border", "2px solid red");
+        $('.btn.active').css('border-color', 'lightblue');
 
         $('[title="DIVTitle"]').css({ "background-color": "cyan", "color":"red", "font-weight": "bold", "font-size": "25px" });
     });
@@ -62,29 +63,54 @@
     <div><a href="http://yahoo.com">Yahoo - (Div > a) </a> </div>
 <br/>
 
-$('td') // Selects all td elements <br/>
-$('div a') // Select all anchor elements that are descendants of div element<br/>
-$('div, span, a') // Selects all div, span and anchor elements<br/>
-<br/>
-$('.small')             // Selects all elements with class small<br/>
-$('.small, .big')       // Selects all elements with class small or big<br/>
-$('div.small, .big')    // Selects div elements with class small and any element with class big<br/>
-<br/>
-$('[title]') // Selects all elements that have title attribute <br/>
-$('div[title]') // Selects all div elements that have title attribute <br/>
-$('[title="divTitle"]') // Selects all elements that have title attribute value - divTitle <br/>
-$('div[title="divTitle"]') // Selects all div elements that have title attribute value - divTitle <br/>
-<br/>
-$('div[title]').css('border', '5px solid red'); <br/>
-$('[title="div1Title"]').css('border', '5px solid red'); <br/>
-<br/>
-Selects all div elements with title attribute value - divTitle,
-<br/>and style attribute value - background-color:red, and sets 5px solid black border<br/>
-$('div[title="divTitle"][style="background-color:red"]').css('border', '5px solid black'); <br/>
-<br/>
-Selects all div elements with either title or style attributes, and sets 5px solid black border<br/>
-$('div[title], [style]').css('border', '5px solid black'); <br/>
-<br/>
+<pre>
+$('td')             // Selects all td elements
+$('div a')          // Select all anchor elements that are descendants of div element
+$('div, span, a')   // Selects all div, span and anchor elements
+
+$('.small')             // Selects all elements with class small
+$('.small, .big')       // Selects all elements with class small or big
+$('div.small, .big')    // Selects div elements with class small and any element with class big
+
+$('[title]')                // Selects all elements that have title attribute 
+$('div[title]')             // Selects all div elements that have title attribute 
+$('[title="divTitle"]')     // Selects all elements that have title attribute value - divTitle 
+$('div[title="divTitle"]')  // Selects all div elements that have title attribute value - divTitle 
+
+$('div[title]').css('border', '5px solid red'); 
+$('[title="div1Title"]').css('border', '5px solid red'); 
+
+Selects all div elements with title attribute value - divTitle, 
+ and style attribute value - background-color:red, and sets 5px solid black border
+$('div[title="divTitle"][style="background-color:red"]').css('border', '5px solid black'); 
+
+Selects all div elements with either title or style attributes, and sets 5px solid black border<
+$('div[title], [style]').css('border', '5px solid black'); 
+
+
+//-----------------
+//jquery dataTables
+//-----------------
+$( '#example' ).on('click', 'td', function(event) {
+    event.preventDefault();
+    var col = this.cellIndex;                               //$(this)[0].closest('td').cellIndex = cell number of current row 
+    
+    //$(this)[0].dataset.dtRow                              //row number from total data count
+    //$(this)[0].dataset.dtColumn
+    //$(this)[0].innerText
+    
+    //var row = parseInt($(this)[0].dataset.dtRow) + 1;                 //(can see all Column) dtRow = data row number
+    var row = $(this)[0].closest('tr').rowIndex;                        //(can see all Column) rowIndex = current table row number
+    var spcDate = $('#example tr:nth-child(' + row.toString() + ') td:nth-child(9)')[0].innerText;
+    
+    var prcID = $(this).closest('tr').find('td:eq(0)').text();          //(only can see Freezed Column)
+    var prcName = $(this).closest('tr').find('td:eq(1)').text();        //(only can see Freezed Column)
+});
+
+
+
+
+</pre>
 
 </body>
 </html>
