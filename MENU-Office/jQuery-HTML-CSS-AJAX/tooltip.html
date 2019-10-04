@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Tooltip Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Bootstrap: Contextual Badges</h2>
+  <span class="badge badge-primary">Primary</span>
+  <span class="badge badge-secondary">Secondary</span>
+  <span class="badge badge-success">Success</span>
+  <span class="badge badge-danger">Danger</span>
+  <span class="badge badge-warning">Warning</span>
+  <span class="badge badge-info">Info</span>
+  <span class="badge badge-light">Light</span>
+  <span class="badge badge-dark">Dark</span>
+</div>
+<Br />
+
+<div class="container">
+  <h2>Bootstrap: Tooltip examples: data-toggle="tooltip"</h2>
+    <button data-toggle="tooltip" title="" class="btn btn-primary" >Button </button>
+    <button data-toggle="tooltip" title="Bootstrap tooltip - Button 2" >Button 2</button>
+    span: <span data-toggle="tooltip" title="Bootstrap tooltip - span 3" >Button 3</span>
+</div>
+<Br />
+
+<style>
+[data-title]:hover:after {
+    opacity: 1;
+    transition: all 0.1s ease 0.5s;
+    visibility: visible;
+}
+[data-title]:after {
+    content: attr(data-title);
+    background-color: #00FF00;
+    color: #111;
+    font-size: 150%;
+    position: absolute;
+    padding: 1px 5px 2px 5px;
+    bottom: -1.6em;
+    left: 100%;
+    white-space: nowrap;
+    box-shadow: 1px 1px 3px #222222;
+    opacity: 0;
+    border: 1px solid #111111;
+    z-index: 99999;
+    visibility: hidden;
+}
+[data-title] {
+    position: relative;
+}
+
+.tooltip-wrapper {
+    /*This causes the wrapping element to be the same size as what it contains.*/
+    display: inline-block;
+}
+</style>
+<div class="container">
+  <h2>CSS: Tooltip examples: [data-title] - Only style chnage and apply</h2>
+    <span> Text input with a pseudo-tooltip: <span class="tooltip-wrapper" data-title="input type=&quot;text&quot;">
+        <input type='text'></span> 
+    <span>
+    <span> Textarea   with a pseudo-tooltip: <span class="tooltip-wrapper" data-title="this is a textarea 111111111111111111111">
+        <textarea>AAAA</textarea></span> 
+    </span> 
+</div>
+<Br />
+
+
+<style>
+#tooltip {              /*Tooltip.js default*/
+	position:absolute;
+	background:#DB2A64;
+	color:#ffffff;
+	padding:8px;
+	z-index:999;
+}
+
+#tooltip.alt-tooltip {
+	background:#490B22;
+    //background-color: yellow; 
+    
+    color: white; 
+    border:solid 1px green; 
+    width:50%; 
+    word-wrap: break-word; 
+    margin: auto; 
+    padding: 10px 5px 10px 5px;
+}
+//.cursor { background-color: yellow; border:solid 1px green; width:100%; word-wrap: break-word; margin: auto; padding: 10px 5px 10px 5px;}
+
+</style>
+
+<div class="container">
+  <h2>Javascript: custom tooltip - style, <u>width</u>, <u>word-wrap: break-word;</u> </h2>
+  <h5>https://matthias-schuetz.js.org/tooltip.js/</h5>
+  <Br />
+  <h5>this javascript only works when html is all loaded and then js will identify tooltip tags.</h5>
+  <h5 style="color: red;">this javascript will not work on dynamic load html</h5>
+  <Br />
+  
+    <span><span class="anyClass" data-tooltip title="I'm a tooltip text" >
+        Tooltip demo 1 (hover here)
+    </span></span>
+    <span style="padding:50px;"></span>
+    
+    <span><span data-tooltip="{ 'offset': 10, 'class': 'alt-tooltip' }" title="I'm another tooltip text 111112222211111222221111122222111112222211111222225555566666555556666655555666665555566666" >
+        Tooltip demo 2 (hover here)
+    </span></span>
+    <span style="padding:50px;"></span>
+    
+    <span><span data-tooltip="{ 'class': 'alt-tooltip' }" title="I'm another tooltip text 111112222211111222221111122222111112222211111222225555566666555556666655555666665555566666" >
+        Tooltip demo 3 (hover here)
+    </span></span>
+    <span style="padding:50px;"></span>
+</div>
+<Br />
+
+<!--<script src="Tooltip.js" type="text/javascript"></script>-->
+<script>
+/**
+ * Tooltip.js
+ * A basic script that applies a mouseover tooltip functionality to all elements of a page that have a data-tooltip attribute
+ * Matthias Schuetz, http://matthiasschuetz.com
+ *
+ * Copyright (C) Matthias Schuetz
+ * Free to use under the MIT license
+ */
+
+(function (root, factory) {
+	if (typeof define === "function" && define.amd) {
+		// AMD. Register as an anonymous module.
+		define(factory);
+	} else if (!root.tooltip) {
+		// Browser globals
+		root.tooltip = factory(root);
+	}
+}(this, function() {
+	var _options = {
+		tooltipId: "tooltip",
+		offsetDefault: 15
+	};
+
+	var _tooltips = [];
+	var _tooltipsTemp = null;
+
+	function _bindTooltips(resetTooltips) {
+		if (resetTooltips) {
+			_tooltipsTemp = _tooltips.concat();
+			_tooltips = [];
+		}
+
+		Array.prototype.forEach.call(document.querySelectorAll("[data-tooltip]"), function(elm, idx) {
+			var tooltipText = elm.getAttribute("title").trim();
+			var options;
+
+			if (resetTooltips && _tooltipsTemp.length && _tooltipsTemp[idx] && _tooltipsTemp[idx].text) {
+				if (tooltipText.length === 0) {
+					elm.setAttribute("title", _tooltipsTemp[idx].text);
+					tooltipText = _tooltipsTemp[idx].text;
+				}
+
+				elm.removeEventListener("mousemove", _onElementMouseMove);
+				elm.removeEventListener("mouseout", _onElementMouseOut);
+				elm.removeEventListener("mouseover", _onElementMouseOver);
+			}
+
+			if (tooltipText) {
+				elm.setAttribute("title", "");
+				elm.setAttribute("data-tooltip-id", idx);
+				options = _parseOptions(elm.getAttribute("data-tooltip"));
+				
+				_tooltips[idx] = {
+					text: tooltipText,
+					options: options
+				};
+
+				elm.addEventListener("mousemove", _onElementMouseMove);
+				elm.addEventListener("mouseout", _onElementMouseOut);
+				elm.addEventListener("mouseover", _onElementMouseOver);
+			}
+		});
+
+		if (resetTooltips) {
+			_tooltipsTemp = null;
+		}
+	}
+
+	function _createTooltip(text, tooltipId) {
+		var tooltipElm = document.createElement("div");
+		var tooltipText = document.createTextNode(text);
+		var options = tooltipId && _tooltips[tooltipId] && _tooltips[tooltipId].options;
+
+		//tooltipElm.setAttribute("style", "color: black; background-color: yellow; border:solid 1px green; width:50%; word-wrap: break-word; padding: 10px 5px 10px 5px;");
+		if (options && options["class"]) {
+			tooltipElm.setAttribute("class", options["class"]);
+		}
+
+		tooltipElm.setAttribute("id", _options.tooltipId);
+		tooltipElm.appendChild(tooltipText);
+
+		document.querySelector("body").appendChild(tooltipElm);
+	}
+
+	function _getTooltipElm() {
+		return document.querySelector("#" + _options.tooltipId);
+	}
+
+	function _onElementMouseMove(evt) {
+		var tooltipId = this.getAttribute("data-tooltip-id");
+		var tooltipElm = _getTooltipElm();
+		var options = tooltipId && _tooltips[tooltipId] && _tooltips[tooltipId].options;
+		var offset = options && options.offset || _options.offsetDefault;
+		var scrollY = window.scrollY || window.pageYOffset;
+		var scrollX = window.scrollX || window.pageXOffset;
+		var tooltipTop = evt.pageY + offset;
+		var tooltipLeft = evt.pageX + offset;
+
+		if (tooltipElm) {
+			tooltipTop = (tooltipTop - scrollY + tooltipElm.offsetHeight + 20 >= window.innerHeight ? (tooltipTop - tooltipElm.offsetHeight - 20) : tooltipTop);
+			tooltipLeft = (tooltipLeft - scrollX + tooltipElm.offsetWidth + 20 >= window.innerWidth ? (tooltipLeft - tooltipElm.offsetWidth - 20) : tooltipLeft);
+
+			tooltipElm.style.top = tooltipTop + "px";
+			tooltipElm.style.left = tooltipLeft + "px";
+		}
+	}
+
+	function _onElementMouseOut(evt) {
+		var tooltipElm = _getTooltipElm();
+
+		if (tooltipElm) {
+			document.querySelector("body").removeChild(tooltipElm);
+		}
+	}
+
+	function _onElementMouseOver(evt) {
+		var tooltipId = this.getAttribute("data-tooltip-id");
+		var tooltipText = tooltipId && _tooltips[tooltipId] && _tooltips[tooltipId].text;
+
+		if (tooltipText) {
+			_createTooltip(tooltipText, tooltipId);	
+		}
+	}
+
+	function _parseOptions(options) {
+		var optionsObj;
+
+		if (options.length) {
+			try {
+				optionsObj = JSON.parse(options.replace(/'/ig, "\""));
+			} catch(err) {
+				console.log(err);
+			}
+		}
+
+		return optionsObj;
+	}
+
+	function _init() {
+		window.addEventListener("load", _bindTooltips);
+	}
+
+	_init();
+
+	return {
+		setOptions: function(options) {
+			for (var option in options) {
+				if (_options.hasOwnProperty(option)) {
+					_options[option] = options[option];
+				}
+			}
+		},
+		refresh: function() {
+			_bindTooltips(true);
+		}
+	};
+}));
+
+</script>
+
+
+<div class="container">
+  <h2>dynamicdrive.com: Cool DHTML Tooltip</h2>
+    <a href="http://www.yahoo.com" onMouseover="ddrivetip('Visit Yahoo.com')"; onMouseout="hideddrivetip()">Search Engine</a>
+    <span style="padding:50px;"></span>
+    
+    <a href="http://yahoo.com" onMouseover="ddrivetip('Yahoo\'s Site', 'yellow', 250)"; onMouseout="hideddrivetip()">Yahoo</a>
+    <span style="padding:50px;"></span>
+    
+    <span onMouseover='ddrivetip("Cycling through TaskMethods: No of Items=1 FTPClient ")'; onMouseout='hideddrivetip()'>Cycling through TaskMethods: No of Items=1 FTPClient </span>
+    <span style="padding:50px;"></span>
+    
+    <span onMouseover='ddrivetip("<h5>This SPAN has a tip!</h5>  1111111111111111111111<b>22223333</b>111111111111<u>3333333</u>111111111111111111111111111", "#EFEFEF")'; onMouseout='hideddrivetip()'>Some text here. Some text here.</span>
+</div>
+<Br />
+
+<style type="text/css">
+#dhtmltooltip {
+    position: absolute;
+    width: 400px;
+    word-wrap: break-word;
+    border: 2px solid black;
+    padding: 2px;
+    background-color: lightyellow;
+    visibility: hidden;
+    z-index: 100;
+    /*Remove below line to remove shadow. Below line should always appear last within this CSS*/
+    filter: progid:DXImageTransform.Microsoft.Shadow(color=gray,direction=135);
+}
+</style>
+
+<div id="dhtmltooltip"></div>  <!--put this tag to any place in html-->
+
+<script type="text/javascript">
+
+/***********************************************
+* Cool DHTML tooltip script- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* Please keep this notice intact
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+* ---------------------------------------------
+* dhtmltooltip.js
+***********************************************/
+
+var offsetxpoint=-30 //Customize x offset of tooltip
+var offsetypoint=15  //Customize y offset of tooltip
+var ie=document.all
+var ns6=document.getElementById && !document.all
+var enabletip=false
+if (ie||ns6)
+    var tipobj=document.all ? document.all["dhtmltooltip"] : document.getElementById ? document.getElementById("dhtmltooltip") : ""
+document.body.appendChild(tipobj)
+
+function ietruebody() {
+    return (document.compatMode && document.compatMode!="BackCompat")? document.documentElement : document.body
+}
+
+function ddrivetip(thetext, thecolor, thewidth) {
+    if (ns6||ie){
+        if (typeof thewidth!="undefined") tipobj.style.width=thewidth+"px"
+        if (typeof thecolor!="undefined" && thecolor!="") tipobj.style.backgroundColor=thecolor
+        tipobj.innerHTML=thetext
+        enabletip=true
+    return false
+    }
+}
+
+function positiontip(e) {
+    if (enabletip) {
+        var curX=(ns6)?e.pageX : event.clientX+ietruebody().scrollLeft;
+        var curY=(ns6)?e.pageY : event.clientY+ietruebody().scrollTop;
+        //Find out how close the mouse is to the corner of the window
+        var rightedge=ie&&!window.opera? ietruebody().clientWidth-event.clientX-offsetxpoint : window.innerWidth-e.clientX-offsetxpoint-20
+        var bottomedge=ie&&!window.opera? ietruebody().clientHeight-event.clientY-offsetypoint : window.innerHeight-e.clientY-offsetypoint-20
+
+        var leftedge=(offsetxpoint<0)? offsetxpoint*(-1) : -1000
+
+        //if the horizontal distance isn't enough to accomodate the width of the context menu
+        if (rightedge<tipobj.offsetWidth)
+        //move the horizontal position of the menu to the left by it's width
+        tipobj.style.left=ie? ietruebody().scrollLeft+event.clientX-tipobj.offsetWidth+"px" : window.pageXOffset+e.clientX-tipobj.offsetWidth+"px"
+        else if (curX<leftedge)
+        tipobj.style.left="5px"
+        else
+        //position the horizontal position of the menu where the mouse is positioned
+        tipobj.style.left=curX+offsetxpoint+"px"
+
+        //same concept with the vertical position
+        if (bottomedge<tipobj.offsetHeight)
+        tipobj.style.top=ie? ietruebody().scrollTop+event.clientY-tipobj.offsetHeight-offsetypoint+"px" : window.pageYOffset+e.clientY-tipobj.offsetHeight-offsetypoint+"px"
+        else
+        tipobj.style.top=curY+offsetypoint+"px"
+        tipobj.style.visibility="visible"
+    }
+}
+
+function hideddrivetip() {
+    if (ns6||ie) {
+        enabletip=false
+        tipobj.style.visibility="hidden"
+        tipobj.style.left="-1000px"
+        tipobj.style.backgroundColor=''
+        tipobj.style.width=''
+    }
+}
+
+document.onmousemove=positiontip
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+$(document).ready(function () {
+
+//https://bootstrapbay.com/blog/bootstrap-tooltip/
+//https://getbootstrap.com/docs/4.0/components/tooltips/
+
+
+    $('[data-toggle="tooltip"]').tooltip({
+        title: '<h3>Help</h3><p>Click to submit the page</p>',      //default tooltip
+        placement: 'bottom',        //left right top bottom
+        animation: true,
+        delay: { show: 500, hide: 800 },
+        html: true
+    });
+});
+</script>
+</body>
+</html>
