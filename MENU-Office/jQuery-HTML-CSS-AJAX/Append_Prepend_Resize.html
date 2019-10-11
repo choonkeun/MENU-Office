@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Append/Prepend/Before/After</title>
+
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!--<link href="popup-style-resize.css" rel="stylesheet" /> -->
+
+<script>
+$(document).ready(function ()
+{
+    $('.target')
+        .append ('<div class="child">1. Append</div>')
+        .prepend('<div class="child">2. Prepend</div>')
+        .before ('<div class="sibling">3. Before</div>')
+        .after  ('<div class="sibling">4. After</div>');
+
+    //---
+	$( ".window" ).draggable({ cancel: ".wincontent" });	// draggable
+	$( ".wincontent" ).resizable();			                // resizable
+    //---
+
+    $(".window").mousedown(function(){		// active window on top (z-index 1000)
+		makeWindowActive($(this).attr("data-id"));
+    });
+
+    $(".winclose").click(function(){		// close window
+		closeWindwow($(this).parent().parent().attr("data-id"));
+    });
+
+});
+
+var window_icon = '<span title="Minimize" class="winminimize"><span></span></span><span title="Maximize" class="winmaximize"><span></span><span></span></span><span title="Close" class="winclose">x</span>';
+            
+            
+function buttonClick(element) {
+
+    //Show window
+    var id = $(element).attr('data-id');
+    makeWindowActive(id);
+    $("#window" + id).removeClass("closed");
+
+    //set data to window
+    if (id == "0") {
+        $("#window" + id + "_data").text("111111111111111111111111111111111111111111111111111");
+        //$("#window" + id).find('div').eq(0).html('<span title="Close" class="winclose">x</span>').prepend("<strong>1. First</strong>"); -- 'x' not working
+        $("#window" + id).find('div').eq(0).html('<strong>1. First</strong><span title="Close" class="winclose">x</span>');
+    }
+    if (id == "1") {
+        $("#window" + id + "_data").text("222222222222222222222222222222222222222222222222222");
+        var thisTime = new Date().getTime().toString();
+      //$("#window" + id).find('div').eq(0).html('<strong>' + thisTime + '</strong><span title="Close" class="winclose">x</span>');
+        $("#window" + id).find('div').eq(0).html('<strong>' + thisTime + '</strong>' + window_icon);
+    }
+
+    //add Event to all '.Close'
+    var spanAll = $("span[title = 'Close']");
+    spanAll.each(function () {
+        $(this).bind('click', function(event) {
+            closeWindwow(event.target.parentElement.parentElement.getAttribute('data-id'));
+        })
+    });
+};
+
+function makeWindowActive(thisid) {
+	$(".window").each(function() {
+		$(this).css('z-index', $(this).css('z-index') - 1);
+	});
+	$("#window" + thisid).css('z-index',1000);
+	$(".window").removeClass("activeWindow");
+	$("#window" + thisid).addClass("activeWindow");
+}
+
+function closeWindwow(id) {
+	$("#window" + id).addClass("closed");
+}
+</script>
+
+</head>
+
+<style>
+/* --------------------
+ popup-style-resize.css
+ ----------------------*/
+ 
+.window {
+    position: absolute;
+    border: 2px solid #000;
+    background: #EEE;
+	border-radius: 5px;
+	z-index: 1000;
+}
+.window.closed {
+	display: none;
+}
+.window.minimizedWindow {
+	display: none;
+}
+.window.fullSizeWindow {
+    top: 0 !important;
+    right: 0 !important;
+    left: 0 !important;
+    border-radius: 0;
+    bottom: 32px !important;
+}
+.fullSizeWindow .ui-resizable-handle {
+	display: none;
+}
+.windowHeader {
+    background-color: #b7b7e0;
+    text-align: right;
+    border-bottom: 2px solid #000;
+    padding: 2px;
+    cursor: move;
+    height: 28px;
+}
+.activeWindow .windowHeader {
+    background-color: #8888d6;
+}
+.windowHeader > span {
+    display: inline-block;
+    cursor: pointer;
+    border: 2px solid #000;
+    margin-left: 4px;
+    font-size: 19px;
+    padding: 2px 10px;
+    font-family: "Arial Black", Gadget, sans-serif;
+    border-radius: 5px;
+    line-height: 20px;
+    width: 12px;
+    height: 20px;
+    position: relative;
+    overflow: hidden;
+}
+.windowHeader > span:hover {
+	background: rgba(255,255,255,0.3);
+}
+.windowHeader > span.winclose:hover {
+	background: #f15454;
+}
+.windowHeader > span > span {
+    display: inline-block;
+    height: 8px;
+    width: 10px;
+    position: absolute;
+    top: 6px;
+    left: 10px;
+}
+.winminimize > span {
+	border-bottom: 3px solid #000;
+}
+.winmaximize > span {
+	border: 2px solid #000;
+	border-top: 3px solid #000;
+}
+.winmaximize > span:nth-child(2) {
+	display: none;
+}
+.fullSizeWindow .winmaximize > span:nth-child(1) {
+	margin: 2px 0 0 -4px;
+}
+.fullSizeWindow .winmaximize > span:nth-child(2) {
+    display: inline-block;
+    top: 3px;
+    left: 12px;
+}
+.wincontent {
+    padding: 10px;
+    min-width: 200px;
+    min-height: 100px;
+    border: 2px solid #000;
+    margin: 2px;
+	border-radius: 0 0 5px 5px;
+    
+    //display: inline-block;
+    word-wrap: break-word;              
+    background-color: lightyellow;
+    z-index: 1000;                  /* display stack order: higher number is top */
+    overflow-x: hidden;             /* only overflow-y will show up */
+}
+.windowHeader > strong {
+    float: left;
+    margin: 0px 3px 0 10px;
+    line-height: 29px;
+    font-size: 17px;
+}
+
+/*
+.taskbarPanel {
+    display: inline-block;
+    border: 2px solid #000;
+    border-radius: 5px;
+    line-height: 24px;
+    margin: 2px 0 0 10px;
+    font-size: 17px;
+    padding: 0 10px;
+    background: #CCC;
+    font-weight: bold;
+	cursor: pointer;
+}
+.taskbarPanel.activeTab {
+	background: #FFF;
+}
+.taskbarPanel.minimizedTab {
+	background: #AAA;	
+}
+.taskbarPanel.minimizedTab:hover {
+	background: #DDD;
+}
+.taskbarPanel.closed {
+	display: none;
+}
+*/
+</style>
+
+<style>
+    body {
+      padding:50px;
+    }
+
+    .target {
+      border:2px solid #bbb;
+      background-color:#eee;
+      padding:10px;
+      margin:10px auto;
+    }
+
+    .child {
+      display:block;
+      width:65px;
+      font:bold 12px Arial,Sans-Serif;
+      color:white;
+      padding:5px 10px;
+      background-color:DarkRed;
+    }
+
+     .sibling {
+      display:block;
+      width:70px;
+      font:bold 12px Arial,Sans-Serif;
+      color:white;
+      padding:5px 10px;
+      background-color:black;
+    }
+
+    //Display Position
+    #window0 {	top: 200px;	left: 240px;}
+    #window0 .wincontent {	width: 660px; height: 200px;	}
+
+    #window1 {	top: 100px; left: 500px;}                           /* overflow-x: hidden;   only overflow-y will show up                  */
+    #window1 .wincontent {	width: 500px; height: 100px;	}       /* if you define height then the text may overflow: --> height: 100px; */
+
+</style>
+
+<body>
+    <p>Append_Prepend_Resize.html</p>
+    <br />
+
+    <!-- Content -->
+    <div class="target">
+        This is the target div to which new elements are associated using jQuery
+    </div>
+
+    <br />
+    <br />
+    <button onclick="buttonClick(this)" data-id="0">open window0</button>
+    <button onclick="buttonClick(this)" data-id="1">open window1</button>
+    <br />
+    <br />
+
+    <!-- id="window0" : Windows + data-id -->
+    <div id="window0" class="window ui-draggable ui-draggable-handle" data-title="First" data-id="0" style="z-index: 1000;">
+        <div class="windowHeader">
+            <strong>First</strong>
+            <span title="Minimize" class="winminimize">
+                <span></span>
+            </span>
+            <span title="Maximize" class="winmaximize">
+                <span></span>
+                <span></span>
+            </span>
+            <span title="Close" class="winclose">x</span>
+        </div>
+        <div class="wincontent ui-resizable">
+            <div id="window0_data">Window content - First</div>
+        </div>
+    </div>
+
+    <br />
+
+    <!-- id="window1" : Windows + data-id -->
+    <div id="window1" class="window ui-draggable ui-draggable-handle" data-title="Second" data-id="1" style="z-index: 1000;">
+        <div class="windowHeader">
+            <strong>Second</strong>
+            <!--
+            <span title="Minimize" class="winminimize"><span></span></span>
+            <span title="Maximize" class="winmaximize"><span></span><span></span></span>
+             -->
+            <span title="Close" class="winclose">x</span>
+        </div>
+        <div class="wincontent ui-resizable">
+            <div id="window1_data">Window content - Second</div>
+        </div>
+    </div>
+
+</body>
+
+</html>
