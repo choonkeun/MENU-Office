@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<script>
+    $(document).ready(function() {
+
+            //Server Name Button
+            $("input[name='optradio']").change(function () {
+                var serverValue = $("input[name=optradio]:checked").val();
+                $("#serverId").val(serverValue);
+                
+                //$("input[name='optradio']").removeClass('active');
+                //$(this).addClass('active');
+                //if ($(this).val() == "edidevbzpt") {
+                //}
+                //else {
+                //}
+            });
+            
+    });    
+</script>
+
+
+<style>
+    .serverGroup { margin:2px; float: none; }
+
+    .serverGroup label {
+        float:left;
+        width:170px;
+        margin:4px;
+        background-color:#EFEFEF;
+        border-radius:4px;
+        border:1px solid gray;
+        overflow:auto;
+    }
+    /*
+    .serverGroup label span {
+        text-align:center;
+        font-size: 20px;
+        padding:2px 0px;
+        display:block;
+    }
+    */
+    .serverGroup .active {
+        background: lightblue;
+        border:1px solid red;
+        color: red;
+    }
+
+    .blue   { /*background-color:#00BFFF;*/  color: blue; font-weight: bold; }
+    .green  { /*background-color:#A3D900;*/  color: green; }
+    .yellow { /*background-color:#FFCC00;*/  color: yellow; }
+</style>
+
+<div class="container">
+  <h2>Button</h2>
+  
+  <p>The '.serverGroup' class use radio button to keep the 'checked' value</p>            
+  
+  <div class="row">
+    <div class="col-md-12">
+      <div class="serverGroup" class="btn-group" data-toggle="buttons">
+        <label class="btn blue">   <input type="radio" name="optradio" value="DEVSQL1"                  />DEVSQL1 </label>
+        <label class="btn active"> <input type="radio" name="optradio" value="QASQL1" checked="checked" />QASQL1  </label>
+        <label class="btn green">  <input type="radio" name="optradio" value="PRSQL1"                   />PRSQL1  </label>
+      </div> 
+    </div>
+  </div>
+  
+  <br />
+  <br />
+  <input type="text" id="serverId" value="serverId" />
+</div>
+
+
+</body>
+</html>
