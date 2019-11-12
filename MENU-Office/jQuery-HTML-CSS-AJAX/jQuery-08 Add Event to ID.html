@@ -1,0 +1,51 @@
+<html>
+<head>
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+        
+            $('#btnClickMe').on('click', {
+                firstName: 'John',
+                lastName: 'Doe'
+            }, sayHello);
+
+            $('#btnClickMe').on('click', {
+                firstName: 'Mary'
+            }, sayHello);
+
+            $('#btnClickMe').on('click', sayHello);
+
+            function sayHello(event) {
+                if (event.data == null) {
+                    alert('No name provided');
+                }
+                else {
+                    alert('Hello ' + event.data.firstName +
+                        (event.data.lastName != null ? ' ' + event.data.lastName : ''));
+                }
+            }
+        });
+        
+        //        
+        $('#btnClickMe').bind('click mouseover mouseout', function (event) {
+            if (event.type == 'click') {
+                $('#divResult').html('Button Clicked at ' + 'X = ' + event.pageX + ' Y = ' + event.pageY);
+            }
+            else if (event.type == 'mouseover') {
+                $(this).addClass('ButtonStyle');
+            }
+            else {
+                $(this).removeClass('ButtonStyle');
+            }
+        });
+
+        $('#btnClickMe').unbind('mouseover');
+        $('#btnClickMe').unbind()
+        
+    </script>
+</head>
+<body style="font-family:Arial">
+    <input id="btnClickMe" type="button" value="Click Me" />
+</body>
+</html>
