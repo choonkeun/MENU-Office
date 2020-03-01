@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<style>
+* {
+  box-sizing: border-box;
+}
+
+#ThisInput {
+  background-image: url('/css/searchicon.png');
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  width: 50%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+#ThisTable {
+  border-collapse: collapse;
+  width: 80%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+#ThisTable th {
+  text-align: left;
+  padding: 12px;
+}
+#ThisTable td {
+  text-align: left;
+  padding: 5px;
+}
+#ThisTable tr {
+  border-bottom: 1px solid #ddd;
+}
+#ThisTable tr.header, #ThisTable tr:hover {
+  background-color: #f1f1f1;
+}
+
+    th, td {
+      text-align: left;
+      padding: 2px;
+      font-size: 12px;
+      font-family: Helvetica, Arial, sans-serif;
+    }
+    .message
+    {  
+       padding-left: 10px; 
+       background-color: White;
+       color : #336699;     /brown;
+       font-family: Helvetica, Arial, sans-serif;
+       font-size: 18px;
+       vertical-align:middle;
+    } 
+
+</style>
+</head>
+<body>
+
+<h2>My Customers</h2>
+
+<input type='text' id='ThisInput' onkeyup='ThisFunction()' placeholder='Search for characters..' title='Type in a characters'>
+<span id="filterMessage" ForeColor="red" class="message"></span>
+
+<table id='ThisTable'>
+  <tr class='header'>
+    <th style='width:50%;'>Name</th>
+    <th style='width:30%;'>Country</th>
+    <th style='width:20%;'>Population</th>
+  </tr>
+  <tr>
+    <td>Berglunds snabbkop</td>
+    <td>Sweden</td>
+    <td>1,234</td>
+  </tr>
+  <tr>
+    <td>North/South</td>
+    <td>UK</td>
+    <td>234</td>
+  </tr>
+  <tr>
+    <td>Alfreds Futterkiste</td>
+    <td>Germany</td>
+    <td>34</td>
+  </tr>
+  <tr>
+    <td>Koniglich Essen</td>
+    <td>Germany</td>
+    <td>44</td>
+  </tr>
+  <tr>
+    <td>Magazzini Alimentari Riuniti</td>
+    <td>Italy</td>
+    <td>5,235</td>
+  </tr>
+  <tr>
+    <td>Paris specialites</td>
+    <td>France</td>
+    <td>126,235</td>
+  </tr>
+  <tr>
+    <td>Island Trading</td>
+    <td>UK</td>
+    <td>57,267</td>
+  </tr>
+  <tr>
+    <td>Laughing Bacchus Winecellars</td>
+    <td>Canada</td>
+    <td>18,234</td>
+  </tr>
+</table>
+
+<script>
+
+function ThisFunction() {
+    var input, filter, table, tr, td, i, cnt, txtValue, filterMessage;
+    input = document.getElementById('ThisInput');
+    filter = input.value.toUpperCase();
+    table = document.getElementById('ThisTable');
+    tr = table.getElementsByTagName('tr');
+    cnt = 0;
+    document.getElementById("filterMessage").innerHTML = '';
+    
+    for (i = 0; i < tr.length; i++) {
+        for (j = 0; j < tr[i].cells.length; j++) {
+            td = tr[i].getElementsByTagName('td')[j];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = '';
+                    cnt++;
+                    document.getElementById("filterMessage").innerHTML = (cnt.toString() + ' row(s) are selected');
+                    break;
+                } else {
+                    tr[i].style.display = 'none';
+                }
+            }       
+        }       
+    }
+}
+</script>
+
+</body>
+</html>
