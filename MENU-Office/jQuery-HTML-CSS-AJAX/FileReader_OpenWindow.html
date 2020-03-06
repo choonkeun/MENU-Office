@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>read file using FileReader API</title>
+  </head>
+  <body>
+
+<style>
+p, th, tr, td { white-space: nowrap; font-size: 12px; height:12px; } 
+#ThisTable { font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif; border-collapse: collapse; width: 80%; }
+#ThisTable td, #ThisTable th { border: 1px solid #ddd; padding: 2px; }
+#ThisTable th { padding-top: 2px; padding-bottom: 2px; text-align: left; background-color: #228B22; color: white; }
+</style>
+<br />
+<p>Double click to view the file om FullPath Column</p>
+<table id="ThisTable">
+<thead><tr><th>Full Path</th><th>DateTime</th><th>File Size</th></tr></thead>
+<tbody>
+<tr><td>\\optima\group\medicare data feeds\mspfiles\InfoCrossingDocuments\H7501.MSPCOBMA.D131216.T0312263.txt</td><td>2014-03-03 11:13:26</td><td style="text-align:right;">33,006</td></tr>
+<tr><td>\\optima\group\medicare data feeds\mspfiles\MSP Files 2020\H7501.MSPCOBMA.D200220.T0750558.txt</td><td>2020-02-20 09:21:51</td><td style="text-align:right;">37,908</td></tr>
+<tr><td>\\optima\group\medicare data feeds\mspfiles\InfoCrossingDocuments\H7501.MSPCOBMA.D140115.T1741030.txt</td><td>2014-03-03 11:08:35</td><td style="text-align:right;">22,004</td></tr>
+<tr><td>\\optima\group\medicare data feeds\mspfiles\MSP Files 2019\H7501.MSPCOBMA.D190124.T1041351.txt</td><td>2019-01-24 12:56:49</td><td style="text-align:right;">31,590</td></tr>
+<tr><td>\\optima\group\medicare data feeds\mspfiles\MSP Files 2019\H7501.MSPCOBMA.D190221.T0932038.txt</td><td>2019-02-21 06:58:53</td><td style="text-align:right;">31,590</td></tr>
+<tr><td>\\optima\group\medicare data feeds\mspfiles\MSP Files 2019\H7501.MSPCOBMA.D190326.T0930353.txt</td><td>2019-03-26 06:50:19</td><td style="text-align:right;">32,292</td></tr>
+<tr><td>\\optima\group\medicare data feeds\mspfiles\MSP Files 2019\H7501.MSPCOBMA.D190423.T0823005.txt</td><td>2019-04-23 09:44:35</td><td style="text-align:right;">32,292</td></tr>
+</tbody>
+</table>
+<br /> 
+
+    <input type='file' onchange="readURL(this);" />
+    <div id="progress" style="display: none" >loading...</div>
+    <div id="Preview">
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script>
+
+// https://developer.mozilla.org/en-US/docs/Web/API/FileReader
+// *** FileReader object to read its contents into memory
+// 1. FileReader.readAsBinaryString(Blob|File)
+// 2. FileReader.readAsText        (Blob|File, opt_encoding)
+// 3. FileReader.readAsDataURL     (Blob|File) - Base64
+// 4. FileReader.readAsArrayBuffer (Blob|File)
+
+    function OpenNewWindow(bigurl, width, height)
+    {
+        popUp = window.open("", "_blank", "width=" + width + ", height=" + height + ", location=no, directories=no, fullscreen=no, menubar=no, status=no, toolbar=no, scrollbars=no"); 
+        popUp.document.writeln("<html>");
+        popUp.document.writeln("<body style='margin: 0; padding:0; background-color:#ddd; '>"); //width:100%; height:100%; 
+        popUp.document.writeln("<a href='javascript:self.close();'>"); 
+        popUp.document.writeln("<img src='" + bigurl + "' alt='Click to close' style='margin:0;padding:0;display:block;auto; max-width:100%;max-height:100%;'/>");
+        popUp.document.writeln("</a>");
+        popUp.document.writeln("</body></html>");
+        popUp.document.close();
+    }
+        
+    function readURL(evt) {
+        let progress = document.querySelector('#progress');
+        var f = evt.files[0];
+        if (f) {
+            if (typeof (FileReader) != "undefined") {
+
+                if ( /\.(jpe?g|png|gif)$/i.test(f.name) ) {
+                  //https://jsfiddle.net/ecj81dex/4/ auto resizeimage
+                  var reader = new FileReader();
+                  reader.onload = function(e) {
+                    var image = new Image();
+                    //image.height = 500;
+                    image.title = f.name;
+                    image.src = this.result;
+                    $('#Preview').html( image );
+                    OpenNewWindow(this.result, 500, 500);
+                  };
+                  reader.onloadstart = function(e) {
+                    document.getElementById('progress').innerHTML = 'loading';
+                    $('#progress').css('color', 'red');
+                    $('#progress').css({"display": ""});
+                  };
+                  reader.onloadend = function(e) {
+                    $('#progress').css({"display": "none"});
+                  };
+                  reader.readAsDataURL(f);
+                };
+
+                if ( /\.(txt|xml|json)$/i.test(f.name) ) {
+                  var reader = new FileReader();
+                  reader.addEventListener("load", function () {
+                    $('#Preview').append("<pre>" +  this.result + "</pre>");
+                  }, false);
+
+                  reader.addEventListener("progress", function () {
+                    $('#progress').css('color', 'blue');
+                    $('#progress').css({"display": ""});
+                  }, false);
+
+                  reader.addEventListener("loadend", function () {
+                    $('#progress').css({"display": "none"});
+                  }, false);
+
+                  reader.readAsText(f);
+                };
+
+            } else {
+              alert("This browser does not support FileReader.");
+            }
+        }
+    };
+    
+    var popUp; 
+    var toolBar = 'toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400'; 
+    
+    function outToWindow(displayHtml) { 
+        if (popUp) {
+            popUp.document.write(displayHtml);       //popUp.document.body.innerHTML = displayHtml;
+            popUp.document.close();                  //must followed after write to display
+        } 
+    };
+            
+    $(document).ready(function(){ 
+        //$('#ThisTable tr td:first-child').addClass('hit'); 
+        $('#ThisTable tr:nth-child(odd)  td:first-child').addClass('hit'); 
+        $('#ThisTable tr:nth-child(even) td:first-child').addClass('hiteven'); 
+        
+        $(".hit").click(function(){
+           var value=$(this).closest('tr').children('td:first').text();
+           popUp = window.open('', '_blank', toolBar); 
+           outToWindow(value);
+           $('#Preview').html(value);
+           //alert(value);    
+        });
+        
+        $(".hiteven").click(function(){
+           var value=$(this).closest('tr').children('td:first').text();
+           popUp = window.open('', '_blank', toolBar); 
+           outToWindow(value);
+           //alert(value);    
+        });    
+        
+        
+    });
+ 
+</script>
+
+  </body>
+</html>
