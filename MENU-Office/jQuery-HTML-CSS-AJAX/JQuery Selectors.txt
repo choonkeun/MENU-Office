@@ -38,8 +38,8 @@ element ~ siblings      $("div ~ p")                        All <p> elements tha
 :not(selector)          $("input:not(:empty)")              All input elements that are not empty
                                                             
 :header                 $(":header")                        All header elements <h1>, <h2> ...
-:animated               $(":animated")                  --> All animated elements
-:focus                  $(":focus")                         The element that currently has focus
+:animated               $(":animated")                      All animated elements
+:focus                  $(":focus")                     --> The element that currently has focus
 :contains(text)         $(":contains('Hello')")             All elements which contains the text "Hello"
 :has(selector)          $("div:has(p)")                     All <div> elements that have a <p> element
 :empty                  $(":empty")                         All elements that are empty
