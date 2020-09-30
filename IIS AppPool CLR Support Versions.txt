@@ -1,0 +1,44 @@
+
+
+https://stackoverflow.com/questions/37952860/which-version-of-the-net-framework-is-iis-using-for-my-apppool/37953052
+
+Which version of the .NET Framework is IIS using for my AppPool?
+---------------------------------------------------------------
+
+
+The AppPool's .NET CLR Version is different from the .NET Framework Version.
+The .NET CLR Version 4.0 is the CLR base for the following .NET Framework Versions:
+
+4
+4.5 (including 4.5.1 and 4.5.2)
+4.6 (including 4.6.1 and 4.6.2 Preview)
+
+So having a .NET CLR Version of 4.0 just means you support the above Frameworks, 
+which will run under their deployed framework version.
+
+
+CLR 1.0
+.NET Framework 1.0
+
+CLR 1.1
+.NET Framework 1.1
+
+CLR 2.0
+.NET Framework 2.0
+.NET Framework 3.0
+.NET Framework 3.5
+
+CLR 4
+.NET Framework 4
+.NET Framework 4.5
+.NET Framework 4.5.1
+.NET Framework 4.5.2
+.NET Framework 4.6
+.NET Framework 4.6.1
+.NET Framework 4.6.2
+.NET Framework 4.7
+.NET Framework 4.7.1
+.NET Framework 4.7.2
+.NET Framework 4.8
+
+
